@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Processing Web App</title>
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            margin: 0;
+            padding: 0;
+            background-size: cover;
+            background-repeat: no-repeat;
+            display: flex; /* Center content horizontally */
+            justify-content: center; /* Center content horizontally */
+            align-items: center; /* Center content vertically */
+            height: 100vh; /* Set height to full viewport height */
+        }
+        
+        #video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1; /* Set z-index to send it behind other content */
+        }
+
+        video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1; /* Set z-index to send it behind other content */
+        }
+        .title-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            z-index: 1; /* Ensure the title stays above the video */
+        }
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 1%;
+            margin-bottom: 1%;
+        }
+        #left-logo, #right-logo {
+            position: absolute;
+            top: 20px;
+            width: 50px; /* Adjust width as needed */
+            height: auto;
+        }
+
+        #left-logo {
+            left: 20px;
+        }
+
+        #right-logo {
+            right: 20px;
+        }
+
+        .container {
+            max-width: 400px;
+            padding: 20px;
+            background-color: rgba(197, 146, 146, 0.3);
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: auto;
+            position: relative;
+            z-index: 1; /* Ensure the content stays above the video */
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 25px;
+            margin-left: 38%;
+        }
+        .title-container{
+            background-color: rgba(197, 146, 146, 0.3);
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .text-success {
+            color: green;
+        }
+
+        .text-danger {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="title-container">
+        <div class="title">TREE ENUMERATION SYSTEM</div>
+    </div>
+    <div id="video-container">
+        <video autoplay muted loop>
+            <source src="Back.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    <div class="container">
+        <h1>Image Processing Web App</h1>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="imageUpload">Select an image:</label>
+                <input type="file" id="imageUpload" name="file">
+            </div>
+            <button type="submit" class="btn-primary">Upload</button>
+        </form>
+        <div id="result"></div>
+    </div>
+    <div class="video-background">
+        <video autoplay muted loop id="video-bg">
+            <source src="back.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <script>
+        // Add your JavaScript code here
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            var formData = new FormData(this);
+
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.result) {
+                    document.getElementById('result').innerHTML = '<p class="text-success">' + data.result + '</p>';
+                } else {
+                    document.getElementById('result').innerHTML = '<p class="text-danger">Error: Something went wrong.</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('result').innerHTML = '<p class="text-danger">Error: ' + error + '</p>';
+            });
+        });
+    </script>
+</body>
+</html>
